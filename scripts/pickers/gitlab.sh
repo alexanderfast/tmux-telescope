@@ -26,9 +26,10 @@ picker_list() {
 
 picker_select() {
 	selected=$1
-	selected_expanded="git@$WORK_GITLAB/$selected"
+	selected="${selected::-1}" # remove trailing slash
+	selected_expanded="git@$WORK_GITLAB/$selected.git"
 	# TODO: target dir for cloning
-	selected_dir="$HOME/$selected"
+	selected_dir="$selected"
 
 	session_name=$(echo "$selected" | sed 's/\./_/g')
 	session_name_escaped=$(printf '%q' "$session_name")
@@ -39,7 +40,7 @@ picker_select() {
 
 	if [ ! -d "$selected_dir" ]; then
 		mkdir -p $selected_dir
-		git clone git@$WORK_GITLAB:$selected.git $selected_dir
+		git clone $selected_expanded $selected_dir
 	fi
 
 	if tmux has-session -t "$session_name_escaped" 2>/dev/null; then
