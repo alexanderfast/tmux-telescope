@@ -27,9 +27,9 @@ picker_list() {
 picker_select() {
 	selected=$1
 	selected="${selected::-1}" # remove trailing slash
-	selected_expanded="git@$WORK_GITLAB/$selected.git"
+	selected_expanded="git@$WORK_GITLAB:${selected/#\~\//}.git"
 	# TODO: target dir for cloning
-	selected_dir="$selected"
+	selected_dir="${selected/#\~/$HOME}" # expand home
 
 	session_name=$(echo "$selected" | sed 's/\./_/g')
 	session_name_escaped=$(printf '%q' "$session_name")
